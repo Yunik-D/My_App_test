@@ -1,48 +1,59 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react"; //importando biblioteca react.
+import { StyleSheet, Text, TextInput, View } from "react-native"; 
 
 export default function Home(){
-    const [name, setName] = useState(''); //useState do nome (UseState é o controlador de estado).
-    const [age, setAge] = useState('');
-    const ageN = parseInt(age);
+    const [name, setName] = useState(''); //UseState é o controlador de estado. Ele mantém a string
+    const [age, setAge] = useState(''); //Vazia até que o usuário preencha um campo. É atualizado em tempo real.
+    const ageN = parseInt(age); //Converte idade string para inteiro.
 
-    const [Altura, setAltura] = useState('');
+    const [Altura, setAltura] = useState(''); 
     const [Peso, setPeso] = useState('');
     const pesoN = parseFloat(Peso);
     const alturaN = parseFloat(Altura);
-    const IMC = pesoN / (alturaN * alturaN);
+    const IMC = pesoN / (alturaN * alturaN); //calculando o IMC.
 
-    
+    let cls = ""; //Define a variável vazia para o caso de condição. Precisa ser tipo let para que o valor possa mudar.
+    if (!isNaN(IMC)) { // !isNaN(IMC) irá retornar true caso o valor seja tipo number e executar a condição. 
+      if (IMC < 18.5) { 
+         cls = "em condição de fragilidade corpórea, abaixo do peso que vos seria digno.";
+      } else if (IMC >= 18.5 && IMC < 24.9) {
+        cls = "em equilíbrio aprazível, com peso tido por normal às vossas medidas.";
+      } else if (IMC >= 24.9 && IMC < 29.9) {
+        cls = "levemente excedido em vossa compleição, encontrando-vos em sobrepeso.";
+      } else if (IMC >= 29.9 && IMC < 34.9) {
+        cls = "em volumosa compleição, classificado como Obesidade Grau I.";
+      } else if (IMC >= 34.9 && IMC <= 39.9) {
+        cls = "em vultosa compleição, classificado como Obesidade Grau II.";
+      } else if (IMC >= 40) {
+        cls = "em grave excesso de massa, classificado como Obesidade Grau III.";
+  } //Dependendo da condição atinginda, a variável cls receberá a string da respectiva condição.
+}
 
     return(
         <View style={styles.body}> 
          <TextInput placeholder = "Wie heiße Sie?"
-         onChangeText={setName} style={styles.input}/> 
+         onChangeText={setName} style={styles.input}/> {/*Campo indicativo para o usuário preencher com dados.*/}
             <Text style={styles.title}>
-                Hallo, Ich heiße {name}!
+                Hallo, Ich heiße {name}! {/*Exibe o texto e o conteúdo que será armazenado na variável {name}.*/}
                 </Text>
                 
          <TextInput placeholder = "Wie alt bist du?"
-         onChangeText={setAge} keyboardType="numeric" style={styles.input}/>
+         onChangeText={setAge} keyboardType="numeric" style={styles.input}/> {/*Campo indicativo para o usuário preencher com dados.*/}
             <Text style={styles.title}>
-                 Ich bin {ageN} Jahre alt!
+                 Ich bin {ageN} Jahre alt! {/*Exibe o texto e o conteúdo que será armazenado na variável {ageN}.*/}
                 </Text>
 
-         <TextInput placeholder = "Qual a sua altura?"
-         onChangeText={setAltura} keyboardType = "numeric" style={styles.input}/>
+         <TextInput placeholder = "Estatura de porte"
+         onChangeText={setAltura}  style={styles.input}/>
             
                 
-         <TextInput placeholder = "Qual o seu peso?"
-         onChangeText={setPeso} keyboardType="numeric" style={styles.input}/>
+         <TextInput placeholder = "Volume corporal"
+         onChangeText={setPeso}  style={styles.input}/>
             <Text style={styles.title}>
-                 Seu IMC é: {IMC}. <br/>
-
-                 Menor que 18.5: Abaixo do peso.<br/>
-                 Entre 18.5 e 24.9: Peso normal.<br/>
-                 Entre 24.9 e 29.9: Sobrepeso.<br/>
-                 Entre 29.9 e 34.9: Obesidade grau I.<br/>
-                 Entre 34.9 e 39.9: Obesidade grau II.<br/>
-                 Maior que 40: Obesidade grau III.<br/>
+                {isNaN(IMC) 
+                ? "Por obséquio, infame persona, informe corretamente vossa estatura de porte e volume."
+                : `Vosso paquímetro de dobras cutâneas é: ${IMC.toFixed(2)} e encontra-se ${cls}`
+                } {/* isNaN(IMC) = Se o valor digitado nos campos de altura e peso for texto, retorna a mensagem mantida em "?". Caso seja numérico, " : " segue com o cáuculo. "${IMC.toFixed(2)}" indica quantas casas decimais serão exibidas. */}
                 </Text>
             
         </View>
