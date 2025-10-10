@@ -1,5 +1,12 @@
-import React, { useState } from "react"; //importando biblioteca react.
-import { StyleSheet, Text, TextInput, View } from "react-native"; 
+import { fetchCharacters } from "@/services/list";
+import React, { useEffect, useState } from "react"; //importando biblioteca react.
+import { FlatList, Image, StyleSheet, Text, TextInput, View } from "react-native"; 
+
+interface Personagem {
+  id: number;
+  name: String;
+  images: [String];
+}
 
 export default function Home(){
     const [name, setName] = useState(''); //UseState é o controlador de estado. Ele mantém a string
@@ -27,6 +34,18 @@ export default function Home(){
       } else if (IMC >= 40) {
         cls = "em grave excesso de massa, classificado como Obesidade Grau III.";
   } //Dependendo da condição atinginda, a variável cls receberá a string da respectiva condição.
+
+const [Personagens, setPersonagens] = useState<Personagem[]>([]);
+
+useEffect(() => {
+  async function carregarPersonagens(){
+    const dados = await fetchCharacters();
+    setPersonagens(dados.characters);
+  }
+
+  carregarPersonagens();
+}, []);
+
 }
 
     return(
@@ -56,6 +75,20 @@ export default function Home(){
                 } {/* isNaN(IMC) = Se o valor digitado nos campos de altura e peso for texto, retorna a mensagem mantida em "?". Caso seja numérico, " : " segue com o cáuculo. "${IMC.toFixed(2)}" indica quantas casas decimais serão exibidas. */}
                 </Text>
             
+
+            <Text>Lista de persnagens</Text>
+
+            <FlatList
+              data={Personagens}
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item}) => (
+                <View> 
+                  <Image source={{uri: item.images[0]}}/>
+                  <Text>{item.name}</Text>
+                </View>
+
+              )}
+            />
         </View>
     );
 }
